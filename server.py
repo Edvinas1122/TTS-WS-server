@@ -7,8 +7,8 @@ import sys
 
 import websockets
 
-from src.server.handler import handle_client
-from src.server.model import load_engine, create_session, load_voices_config, get_default_voice
+from src.handler import handle_client
+from src.model import load_engine, create_session, load_voices_config, get_default_voice
 
 
 import config

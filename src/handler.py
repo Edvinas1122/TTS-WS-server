@@ -1,8 +1,8 @@
 import asyncio
 import json
 
-from src.server.stream import stream_readable_to_socket, stderr_logger, verbose as verbose_wrap
-from src.server.model import load_voices_config
+from src.stream import stream_readable_to_socket, stderr_logger, verbose as verbose_wrap
+from src.model import load_voices_config
 
 _tasks: dict[str, tuple[asyncio.Task, asyncio.Event]] = {}
 
