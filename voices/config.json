@@ -1,0 +1,13 @@
+[
+  {
+    "name": "default",
+    "description": "Original reference voice from code server",
+    "languages": ["en"],
+    "default": true
+  },
+  {
+    "name": "ref_voice",
+    "description": "Alibaba Qwen demo reference voice (clone.wav)",
+    "languages": ["en"]
+  }
+]
