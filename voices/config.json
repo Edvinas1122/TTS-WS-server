@@ -1,7 +1,7 @@
 [
   {
     "name": "default",
-    "description": "Alibaba Qwen demo reference voice (clone.wav)",
+    "description": "My clone voice from code.edvinasmomkus.com",
     "languages": ["en"],
     "default": true
   }
