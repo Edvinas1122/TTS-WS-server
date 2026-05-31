@@ -1,5 +1,7 @@
 # Voice TTS
 
+[![GitHub](https://img.shields.io/badge/GitHub-Edvinas1122/TTS--WS--server-181717?logo=github)](https://github.com/Edvinas1122/TTS-WS-server)
+
 CUDA-accelerated WebSocket TTS streaming server.
 
 **Model**: [Qwen/Qwen3-TTS-12Hz-0.6B-Base](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base) via `faster-qwen3-tts`
@@ -70,12 +72,9 @@ Add: place `voices/my_voice.wav` + `voices/my_voice.txt`, add entry to `config.j
 `config.json` — server settings only (no voice defaults; default voice is marked in `voices/config.json`).
 
 | Key | Default | Description |
-|---|---|---|
+|---|---|---|---|
 | `ws_port` | 8765 | Listen port |
 | `model_path` | Qwen/Qwen3-TTS-12Hz-0.6B-Base | HF model ID |
-| `lang` | en | Fallback language |
-| `speed` | 1.0 | Playback speed |
-| `stream_interval` | 0.5 | Seconds per chunk |
 
 ## Quick test
 
