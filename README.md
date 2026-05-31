@@ -74,7 +74,9 @@ Add: place `voices/my_voice.wav` + `voices/my_voice.txt`, add entry to `config.j
 | Key | Default | Description |
 |---|---|---|---|
 | `ws_port` | 8765 | Listen port |
-| `model_path` | Qwen/Qwen3-TTS-12Hz-0.6B-Base | HF model ID |
+| `model_path` | Qwen/Qwen3-TTS-12Hz-0.6B-Base | HF model ID or local path |
+| `verbose` | false | Log chunks to stderr |
+| `device` | null | CUDA device (null = auto) |
 
 ## Quick test
 
