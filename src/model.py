@@ -1,6 +1,8 @@
+import asyncio
 import json
 import os
 import sys
+import threading
 import time
 
 import numpy as np
@@ -12,7 +14,7 @@ _LANG_MAP = {
     "ja": "japanese", "ko": "korean", "fr": "french", "ru": "russian",
 }
 
-_VOICES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "voices")
+_VOICES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "voices")
 
 
 def _resolve_lang(lang):
@@ -66,14 +68,41 @@ class Session:
 
     def generate(self, text, lang_code=None):
         chunk_size = max(1, int(12 * self.stream_interval))
+        lang = _resolve_lang(lang_code) if lang_code else self.lang
         for audio_chunk, sr, timing in self.engine.generate_voice_clone_streaming(
             text=text,
-            language=lang_code or self.lang,
+            language=lang,
             ref_audio=self.ref_audio,
             ref_text=self.ref_text,
             chunk_size=chunk_size,
         ):
             yield {"audio": audio_chunk, "sample_rate": sr}
+
+    async def generate_async(self, text, lang_code=None):
+        chunk_size = max(1, int(12 * self.stream_interval))
+        lang = _resolve_lang(lang_code) if lang_code else self.lang
+        queue = asyncio.Queue()
+
+        def produce():
+            for audio_chunk, sr, timing in self.engine.generate_voice_clone_streaming(
+                text=text, language=lang, ref_audio=self.ref_audio,
+                ref_text=self.ref_text, chunk_size=chunk_size,
+            ):
+                asyncio.run_coroutine_threadsafe(
+                    queue.put({"audio": audio_chunk, "sample_rate": sr}),
+                    loop,
+                )
+            asyncio.run_coroutine_threadsafe(queue.put(None), loop)
+
+        loop = asyncio.get_event_loop()
+        thread = threading.Thread(target=produce, daemon=True)
+        thread.start()
+
+        while True:
+            chunk = await queue.get()
+            if chunk is None:
+                break
+            yield chunk
 
 
 def load_engine(model_path, verbose=False):
@@ -92,3 +121,12 @@ def create_session(engine, voice, default_lang="en", speed=1.0, stream_interval=
         with open(txt) as f:
             ref_text = f.read().strip()
     return Session(engine, wav, ref_text, lang=default_lang, speed=speed, stream_interval=stream_interval)
+
+
+def warmup(session):
+    print("Warming up model (CUDA graph capture)...", flush=True)
+    t0 = time.time()
+    for chunk in session.generate("This is a warmup."):
+        import numpy as np
+        np.array(chunk["audio"])
+    print(f"Warmup done in {time.time() - t0:.1f}s", flush=True)

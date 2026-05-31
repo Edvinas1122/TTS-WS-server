@@ -18,7 +18,7 @@ def encode_chunk(audio, sample_rate):
 async def stream_readable_to_socket(websocket, session, text, lang_code=None, stop_event=None, on_send=None, on_done=None):
     seq = 0
 
-    for chunk in session.generate(text, lang_code=lang_code):
+    async for chunk in session.generate_async(text, lang_code=lang_code):
         if stop_event and stop_event.is_set():
             break
         b64 = encode_chunk(chunk["audio"], chunk["sample_rate"])
