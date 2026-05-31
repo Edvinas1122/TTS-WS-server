@@ -2,9 +2,6 @@
   "ws_port": 8765,
   "ws_host": "localhost",
   "model_path": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
-  "speed": 1.0,
-  "stream_interval": 0.5,
-  "lang": "en",
   "verbose": false,
   "device": null
 }

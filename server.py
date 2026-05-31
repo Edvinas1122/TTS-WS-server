@@ -35,13 +35,7 @@ def main():
         async with websockets.serve(
             lambda ws: handle_client(
                 ws,
-                create_session(
-                    engine,
-                    default_voice,
-                    default_lang=config.get("lang", "en"),
-                    speed=config.get("speed", 1.0),
-                    stream_interval=config.get("stream_interval", 0.5),
-                ),
+                create_session(engine, default_voice),
                 verbose=config.get("verbose"),
             ),
             "0.0.0.0", port,
